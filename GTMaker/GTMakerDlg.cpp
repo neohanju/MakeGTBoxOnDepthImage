@@ -18,10 +18,17 @@
 
 #define KINECT_WIDTH  (512)
 #define KINECT_HEIGHT (424)
+#define HEAD_DEPTH_RATIO (120000)
 
 bool FilePathSortAscendComparator(const CString str1, const CString str2)
 {
 	return str1.CompareNoCase(str2) <= 0;
+}
+
+
+double CGTObjectInfo::GetHeadBoxWidth(double depth)
+{
+	return HEAD_DEPTH_RATIO / depth;
 }
 
 bool CGTMetadata::writefile(const CString strPath)
@@ -445,8 +452,8 @@ void CGTMakerDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		newObject.id = m_nCurID;
 		COLORREF rgb = m_imgFrame.GetPixel(point.x - rect.left, point.y - rect.top);
 		BYTE r_value = GetRValue(rgb);  // R = G = B in depth image
-		double boxWidth = (double)r_value * 0.3;
-		newObject.depth = (255.0 - (double)r_value) * 8000.0;
+		newObject.depth = (255.0 - (double)r_value) / 255.0 * 8000.0;
+		double boxWidth = CGTObjectInfo::GetHeadBoxWidth(newObject.depth);
 		newObject.x = point.x - boxWidth * 0.5;
 		newObject.y = point.y - boxWidth * 0.5;
 		newObject.w = boxWidth;

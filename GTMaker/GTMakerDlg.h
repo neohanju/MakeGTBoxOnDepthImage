@@ -9,10 +9,7 @@ class CGTObjectInfo
 {
 public:
 	CGTObjectInfo() : id(0), depth(0), x(0.0), y(0.0), w(0.0), h(0.0) {}
-	void setDepth(double depth)
-	{
-
-	}
+	static double GetHeadBoxWidth(double depth);
 	int id;
 	double depth;
 	double x;
